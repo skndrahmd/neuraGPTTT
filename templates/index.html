@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NeuraGPT</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" href="static/neurabrain.png">
+
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pathway+Extreme:wght@200&display=swap');
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: center; */
+            height: 100vh;
+            font-family: Montserrat, sans-serif;
+            background: #0F2027;
+            text-shadow: 2px 5px 5px rgba(0, 0, 0, 0.3);
+            font-size: 3.5vh;
+            color: white;
+            background-image: url('static/neurabrainsec1.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #prompt {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 65px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: medium;
+            box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.5);
+            /* Added box shadow */
+            padding: 1rem;
+            font-family: Montserrat, sans-serif !important;
+
+        }
+
+        #file {
+            width: 90%;
+            max-width: 600px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 16px;
+
+
+
+        }
+
+
+        #loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #image {
+            width: 30%;
+            margin: 15px;
+            margin-top: 2rem;
+
+
+        }
+
+        button {
+            background: #478649;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 65px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0px 0.5vh 1.5vh rgb(0, 0, 0);
+            color: black;
+            font-family: Montserrat, sans-serif;
+            font-size: 20px;
+        }
+
+        button:hover {
+            background: #264727;
+            color: #FFFFFF;
+        }
+
+        #response,
+        #static_file_response {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 65px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-top: 20px;
+            background: #fff;
+            word-wrap: break-word;
+            box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.5);
+            font-family: Montserrat, sans-serif;
+            color: black;
+            font-size: medium;
+
+
+        }
+
+        #response {
+            padding: 2rem;
+            margin-bottom: 2rem !important;
+        }
+
+        .logo {
+            padding-top: 2rem;
+            width: 50%;
+        }
+
+        .home {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+
+            #prompt,
+            #file {
+                width: 100%;
+            }
+
+            #response,
+            #static_file_response,
+            #resp {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="home">
+
+        <img id="image" src="{{ url_for('static', filename='whiteLOGO.svg') }}" />
+
+
+
+        <h1 id="heading" style="letter-spacing: 3px; font-family:'Pathway Extreme', sans-serif !important; ">NeuraGPT v1</h1>
+
+        <p style="font-size: medium;">This is a custom knowledge base chatbot. <br> Upload a .pdf file and ask
+            the bot questions about it.</p>
+
+
+
+        <input id="prompt" type="text" placeholder="   Enter Prompt" />
+        <button onclick="getResponse()">Get Response</button>
+
+        <form enctype="multipart/form-data" onsubmit="return false;">
+            <input id="file" type="file" name="static_file" />
+            <button id="upload-button" onclick="uploadFile(this.form)"> Upload </button>
+        </form>
+        <div id="static_file_response"> </div>
+
+
+        <div id="response">
+            <div id="resp"></div>
+            <div id="loader" style="display:none;"></div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        document.addEventListener("contextmenu", e => e.preventDefault(), false);
+
+        document.addEventListener("keydown", e => {
+            if (e.ctrlKey || (e.keyCode >= 112 && e.keyCode <= 123)) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        function getResponse() {
+
+
+            document.getElementById('loader').style.display = 'block';
+
+            var prompt = document.getElementById('prompt').value;
+            var filename = document.getElementById('file').value;
+
+
+            var formData = new FormData();
+            formData.append('prompt', prompt);
+            formData.append('filename', filename);
+
+            var requestData = { 'prompt': prompt };
+
+            $.ajax({
+                url: '/get-response',
+                data: JSON.stringify(requestData),
+                type: 'POST',
+                contentType: 'application/json',
+
+                success: function (response) {
+                    document.getElementById('resp').innerHTML = response;
+                    console.log(response)
+                    document.getElementById('loader').style.display = 'none';
+                },
+                error: function (response) {
+
+                    console.log("There was an error!");
+                    console.log(response);
+                    document.getElementById('loader').style.display = 'none';
+                }
+            });
+        }
+
+        function uploadFile(form) {
+            var prompt = document.getElementById('prompt').value;
+            const formData = new FormData(form);
+
+            var requestData = { 'prompt': prompt };
+
+            var oOutput = document.getElementById("static_file_response")
+            var oReq = new XMLHttpRequest();
+            oReq.open("POST", "upload_static_file", true);
+            oReq.onload = function (oEvent) {
+                if (oReq.status == 200) {
+                    oOutput.innerHTML = "Uploaded!";
+                    console.log(oReq.response)
+                } else {
+                    oOutput.innerHTML = "Please upload .pdf file.<br \/>";
+                }
+            };
+            oOutput.innerHTML = "Sending file!";
+            console.log("Sending file!")
+            oReq.send(formData);
+        }
+
+    </script>
+
+</body>
+
+</html>
