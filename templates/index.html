@@ -21,17 +21,17 @@
             text-shadow: 2px 5px 5px rgba(0, 0, 0, 0.3);
             font-size: 3.5vh;
             color: white;
-            background-image: url('static/neurabrainsec1.png');
+            background-image: url('static/neurabrainsec1.png'),linear-gradient(90deg, #000 0.68%, #0A161A 49.11%, #000 100%);
             background-repeat: no-repeat;
             background-size: cover;
 
         }
-
+        
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+           
         }
 
         #prompt {
@@ -43,21 +43,20 @@
             box-sizing: border-box;
             font-size: medium;
             box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.5);
-            /* Added box shadow */
+            
             padding: 1rem;
             font-family: Montserrat, sans-serif !important;
 
         }
 
         #file {
-            width: 90%;
+            width: 100%;
             max-width: 600px;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
+        
+            border-radius: 70px;
             color: white;
-            box-sizing: border-box;
-            font-size: 16px;
+        
+            
 
 
 
@@ -87,34 +86,45 @@
             width: 30%;
             margin: 15px;
             margin-top: 2rem;
-
+            opacity:0.7;
 
         }
 
         button {
-            background: #478649;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 65px;
+            background: #1E9B32;
+  
+            border:none;
+            padding: 5px 20px;
+            
+            border-radius: 4rem;
             cursor: pointer;
             margin: 10px;
-            box-shadow: 0px 0.5vh 1.5vh rgb(0, 0, 0);
+            
             color: black;
+            
             font-family: Montserrat, sans-serif;
-            font-size: 20px;
+            font-size: 1rem;
         }
 
         button:hover {
-            background: #264727;
-            color: #FFFFFF;
+            color:wheat;
+            border:none;
+            border-radius: 4rem;
+            background: #1E9B32;
+            box-shadow: 0px 0px 50px 10px rgba(30, 155, 50, 0.50);
+            
         }
 
+        button:active {
+            -webkit-box-shadow: inset 1px 1px 10px #333;
+            -moz-box-shadow:    inset 1px 1px 10px #333;
+            box-shadow:         inset 2px 1px 10px #333;
+         }
         #response,
         #static_file_response {
             width: 100%;
             max-width: 600px;
-            padding: 20px;
+            padding: 1rem;
             border-radius: 65px;
             border: 1px solid #ccc;
             box-sizing: border-box;
@@ -130,7 +140,7 @@
         }
 
         #response {
-            padding: 2rem;
+            padding: 1rem;
             margin-bottom: 2rem !important;
         }
 
@@ -165,7 +175,7 @@
 
     <div class="home">
 
-        <img id="image" src="{{ url_for('static', filename='whiteLOGO.svg') }}" />
+        
 
 
 

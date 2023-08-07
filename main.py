@@ -17,8 +17,8 @@ from langchain.chat_models import ChatOpenAI
 load_dotenv()
 
 
-api_key = os.getenv("OPENAI_API_KEY")
-os.environ['OPENAI_API_KEY'] = api_key
+# api_key = os.getenv("OPENAI_API_KEY")
+# os.environ['OPENAI_API_KEY'] = api_key
 
 
 
